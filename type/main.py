@@ -1,6 +1,19 @@
 import os
 import random
 
+
+class colors:
+	HEADER = '\033[95m'
+	OKBLUE = '\033[94m'
+	OKCYAN = '\033[96m'
+	OKGREEN = '\033[92m'
+	WARNING = '\033[93m'
+	FAIL = '\033[91m'
+	ENDC = '\033[0m'
+	BOLD = '\033[1m'
+	UNDERLINE = '\033[4m'
+
+
 ########################################################
 
 # reading files from words.txt
@@ -10,7 +23,7 @@ with open('words.txt', 'r') as file:
 # setting variables
 words = content.split()
 lim = int(len(words)) - 1
-randnum = random.randint(0, lim)
+length = int(input('Enter sentence length: '))
 
 
 # terminal clearing function for cleaner output
@@ -21,13 +34,12 @@ def clear():
 		os.system('CLEAR')
 
 
-# generating groups of words (placeholder for now)
+# generating groups of words
 def generate():
-	print()
+	for i in range(length):
+		randnum = random.randint(0, lim)
+		randletter = words[randnum]
+		print(randletter)
 
 
-########################################################
-
-print(lim)
-print(randnum)
-print(words[randnum])
+generate()
