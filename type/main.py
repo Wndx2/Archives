@@ -74,7 +74,6 @@ def countdown():
 
 # --- --- --- main function --- --- --- #
 
-
 for i in range(5):
 	generate()
 	clear()
