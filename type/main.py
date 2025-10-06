@@ -17,12 +17,12 @@ class Colors:
 	# could print using colors like this:
 	# print(f'{Colors.BLUE}Enter text here{Colors.DEFAULT}')
 
-	PURPLE = '\033[95m'
-	BLUE = '\033[94m'
-	CYAN = '\033[96m'
-	GREEN = '\033[92m'
-	YELLOW = '\033[93m'
-	RED = '\033[91m'
+	PURPLE = '\033[1;35m'
+	BLUE = '\033[1;34m'
+	CYAN = '\033[1;36m'
+	GREEN = '\033[1;32m'
+	YELLOW = '\033[1;33m'
+	RED = '\033[1;31m'
 	DEFAULT = '\033[0m'
 	GREY = '\033[90m'
 
@@ -33,10 +33,10 @@ class Colors:
 with open('words.txt', 'r') as file:
 	content = file.read()
 
-full_list = content.split()
-full_list_word_count = int(len(full_list)) - 1
-completecount = []
-times = []
+word_list = content.split()
+word_list_length = int(len(word_list)) - 1
+completed_words = []
+word_times = []
 
 # --- --- --- functions --- --- --- #
 
@@ -55,15 +55,15 @@ def flush():
 
 # generating word (does not print)
 def generate():
-	global randletter
+	global current_word
 
 	for i in range(1):
-		randnum = random.randint(0, full_list_word_count)
-		# picks random word from full_list list
-		randletter = (full_list[randnum]).lower()
+		random_index = random.randint(0, word_list_length)
+		# picks random word from word_list list
+		current_word = (word_list[random_index]).lower()
 
 	# Use this to print:
-	# print(f'\n\n {randletter} \n\n')
+	# print(f'\n\n {current_word} \n\n')
 
 
 def countdown():
@@ -74,78 +74,66 @@ def countdown():
 	flush()
 
 
-# --- --- --- main function --- --- --- #
+# --- --- --- main code --- --- --- #
 
 while True:
-	play = input('Start? (y) ')
+	start_game = input('Start? (y) ')
 	try:
-		if play.lower() == 'y':
-			howmany = int(input('How many words? '))
-			while len(completecount) < howmany:
+		clear()
+		if start_game.lower() == 'y':
+			num_words = int(input('How many words? '))
+			while len(completed_words) < num_words:
 				generate()
 				clear()
 				print('\n\nWORD:')
-				print(f'>>> {Colors.BLUE}{randletter}{Colors.DEFAULT}')
+				print(f'>>> {Colors.BLUE}{current_word}{Colors.DEFAULT}')
 
 				countdown()
 
 				start_time = time.time()
 				# time.time() is the initial time when the timer starts
-				userinput = input('>>> ')
-				elapsed = time.time() - start_time
+				user_input = input('>>> ')
+				elapsed_time = time.time() - start_time
 
-				if userinput == randletter:
+				if user_input == current_word:
 					print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
-					print(f'Time taken: {elapsed:.2f} seconds\n\n')
-					completecount.append(userinput)
-					times.append(elapsed)
-
-					# debugging purposes
-					# print(completecount)
-					# print(times)
-
-					boboyuan = 0
-					print('====================')
-					for thing in completecount:
-						print(f'{thing} : {round(times[boboyuan], 2)}')
-						boboyuan += 1
-					print('====================')
+					print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
+					completed_words.append(user_input)
+					word_times.append(elapsed_time)
 
 					time.sleep(2)
+
 				else:
 					print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
 					time.sleep(2)
 
-			totaltime = 0
-			for j in times:
-				totaltime += j
-			avgtime = totaltime / howmany
+			total_time = 0
+			for i in word_times:
+				total_time += i
+			average_time = total_time / num_words
 
-			wpm = 60 / avgtime
+			wpm = 60 / average_time
 
-			print(f'\n\naverage time: {round(avgtime, 2)}')
-			print(f'wpm: {round(wpm, 2)}\n\n')
+			clear()
+			print(f'{Colors.GREY}--- --- --- --- ---\n')
 
-			completecount = []
-			times = []
+			index = 0
+			for j in completed_words:
+				print(f'{j} : {round(word_times[index], 2)}')
+				index += 1
 
-		elif play == 'n':
+			print(f'\n--- --- --- --- ---{Colors.DEFAULT}')
+
+			print(f'\n\nAverage Time: {round(average_time, 2)}')
+			print(f'WPM: {round(wpm, 2)}\n\n')
+
+			completed_words = []
+			word_times = []
+
+		elif start_game == 'n':
 			print('bye')
 			break
 		else:
 			print('ni meiyou baba')
 	except ValueError:
-		print('Valueerrro')
-
-		# 1 : 0.72
-		# 1 x Y : 0.72 x Y = 60
-
-
-# --- --- --- summary --- --- --- #
-
-# append the correctly typed words into a list
-
-# add summary screen:
-# avg time taken, wpm, words that were used (in list)
-
-# put it in a while loop (until 5 correctly typed) so that the user can continue with this unless program quits
+		print('ni meiyou mama')

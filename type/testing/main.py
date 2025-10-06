@@ -1,4 +1,2 @@
-fishnu = {}
-
-fishnu['arthur'] = 'Gay'
-print(fishnu)
+print('\033[1;31mHello')
+print('\033[0;31mHello')
