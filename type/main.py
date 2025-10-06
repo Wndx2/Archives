@@ -14,8 +14,9 @@ import termios
 
 # --- --- --- classes --- --- --- #
 class Colors:
-	# could print using colors like this:
 	# print(f'{Colors.BLUE}Enter text here{Colors.DEFAULT}')
+	# https://gist.github.com/iamnewton/8754917 -- for a list of full color codes
+	# all ansi colors are in colored bold text
 
 	PURPLE = '\033[1;35m'
 	BLUE = '\033[1;34m'
@@ -77,15 +78,22 @@ def countdown():
 # --- --- --- main code --- --- --- #
 
 while True:
-	start_game = input('Start? (y) ')
+	clear()
+	print(f"You type the word that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
+	print(
+		f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n'
+	)
+	print('Your score will be calculated based on your WPM and average speed.\n\n')
+	start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}) ')
 	try:
 		clear()
 		if start_game.lower() == 'y':
 			num_words = int(input('How many words? '))
+			# loops function until gets {num_words} appended into the {word_times} list
 			while len(completed_words) < num_words:
 				generate()
 				clear()
-				print('\n\nWORD:')
+				print('\nWORD:')
 				print(f'>>> {Colors.BLUE}{current_word}{Colors.DEFAULT}')
 
 				countdown()
@@ -100,33 +108,59 @@ while True:
 					print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
 					completed_words.append(user_input)
 					word_times.append(elapsed_time)
-
 					time.sleep(2)
-
 				else:
 					print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
 					time.sleep(2)
 
-			total_time = 0
-			for i in word_times:
-				total_time += i
+			# wpm calculation
+			total_time = sum(word_times)
 			average_time = total_time / num_words
+			all_typed_entries = 0
+			for word in completed_words:
+				all_typed_entries += len(word)
+			wpm = (all_typed_entries / 5) / (total_time / 60)
 
-			wpm = 60 / average_time
-
+			# summary screen
 			clear()
-			print(f'{Colors.GREY}--- --- --- --- ---\n')
+			print(f'{Colors.GREY}--- --- typed words --- ---\n')
 
 			index = 0
 			for j in completed_words:
 				print(f'{j} : {round(word_times[index], 2)}')
 				index += 1
 
-			print(f'\n--- --- --- --- ---{Colors.DEFAULT}')
+			print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
 
-			print(f'\n\nAverage Time: {round(average_time, 2)}')
-			print(f'WPM: {round(wpm, 2)}\n\n')
+			print(f'Average Time: {Colors.YELLOW}{round(average_time, 2)}{Colors.DEFAULT}')
 
+			# prints wpm output based on wpm
+			if wpm < 30:
+				print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+				print(f'{Colors.GREY}* ni shi stoobid{Colors.DEFAULT}\n')
+			elif wpm > 30 and wpm < 60:
+				print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+				print(f"{Colors.GREY}* you're slow asf{Colors.DEFAULT}\n")
+			elif wpm > 60 and wpm < 120:
+				print(f'WPM: {Colors.YELLOW}{round(wpm, 2)}{Colors.DEFAULT}')
+				print(f'{Colors.GREY}* average{Colors.DEFAULT}\n')
+			elif wpm > 120 and wpm < 140:
+				print(f'WPM: {Colors.GREEN}{round(wpm, 2)}{Colors.DEFAULT}')
+				print(f'{Colors.GREY}* good{Colors.DEFAULT}\n')
+			else:
+				print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
+				print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
+
+			# calculates score based on WPM
+			score = round((wpm * 10) + (average_time * 10))
+			print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
+
+			print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
+
+			# enter clears the screen, and reloops the while loop at the top
+			input('Press enter to continue')
+
+			# initializes the lists (fresh state)
 			completed_words = []
 			word_times = []
 
@@ -134,6 +168,6 @@ while True:
 			print('bye')
 			break
 		else:
-			print('ni meiyou baba')
+			print('ni meiyou fangzi')
 	except ValueError:
-		print('ni meiyou mama')
+		continue
