@@ -100,8 +100,16 @@ while True:
 					completecount.append(userinput)
 					times.append(elapsed)
 
-					print(completecount)
-					print(times)
+					# debugging purposes
+					# print(completecount)
+					# print(times)
+
+					boboyuan = 0
+					print('====================')
+					for thing in completecount:
+						print(f'{thing} : {round(times[boboyuan], 2)}')
+						boboyuan += 1
+					print('====================')
 
 					time.sleep(2)
 				else:
