@@ -11,9 +11,8 @@ import random
 import time
 import termios
 
+
 # --- --- --- classes --- --- --- #
-
-
 class Colors:
 	# could print using colors like this:
 	# print(f'{Colors.BLUE}Enter text here{Colors.DEFAULT}')
@@ -28,15 +27,18 @@ class Colors:
 	GREY = '\033[90m'
 
 
-# --- --- --- functions --- --- --- #
+# --- --- --- variables --- --- --- #
 
 # reading files from words.txt
-with open('words25k.txt', 'r') as file:
+with open('words.txt', 'r') as file:
 	content = file.read()
 
-# setting variables
 full_list = content.split()
 full_list_word_count = int(len(full_list)) - 1
+completecount = []
+times = []
+
+# --- --- --- functions --- --- --- #
 
 
 # terminal clearing function for cleaner output
@@ -68,31 +70,68 @@ def countdown():
 	for i in range(3, 0, -1):
 		print(f'\r{i}', end='', flush=True)
 		time.sleep(1)
-	print('\rGO!\n\n')
+	print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
 	flush()
 
 
 # --- --- --- main function --- --- --- #
 
-for i in range(5):
-	generate()
-	clear()
-	print('\n\nWORD:')
-	print(f'>>> {Colors.BLUE}{randletter}{Colors.DEFAULT}')
+while True:
+	play = input('Start? (y) ')
+	try:
+		if play.lower() == 'y':
+			howmany = int(input('How many words? '))
+			while len(completecount) < howmany:
+				generate()
+				clear()
+				print('\n\nWORD:')
+				print(f'>>> {Colors.BLUE}{randletter}{Colors.DEFAULT}')
 
-	countdown()
+				countdown()
 
-	start_time = time.time()
-	# time.time() is the initial time when the timer starts
-	userinput = input('>>> ')
-	elapsed = time.time() - start_time
+				start_time = time.time()
+				# time.time() is the initial time when the timer starts
+				userinput = input('>>> ')
+				elapsed = time.time() - start_time
 
-	if userinput == randletter:
-		print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
-		print(f'Time taken: {elapsed:.5f} seconds\n\n')
-		time.sleep(2)
-	else:
-		print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+				if userinput == randletter:
+					print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
+					print(f'Time taken: {elapsed:.2f} seconds\n\n')
+					completecount.append(userinput)
+					times.append(elapsed)
+
+					print(completecount)
+					print(times)
+
+					time.sleep(2)
+				else:
+					print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+					time.sleep(2)
+
+			totaltime = 0
+			for j in times:
+				totaltime += j
+			avgtime = totaltime / howmany
+
+			wpm = 60 / avgtime
+
+			print(f'\n\naverage time: {round(avgtime, 2)}')
+			print(f'wpm: {round(wpm, 2)}\n\n')
+
+			completecount = []
+			times = []
+
+		elif play == 'n':
+			print('bye')
+			break
+		else:
+			print('ni meiyou baba')
+	except ValueError:
+		print('Valueerrro')
+
+		# 1 : 0.72
+		# 1 x Y : 0.72 x Y = 60
+
 
 # --- --- --- summary --- --- --- #
 
