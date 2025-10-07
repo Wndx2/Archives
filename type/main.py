@@ -28,61 +28,60 @@ class Colors:
 	GREY = '\033[90m'
 
 
-# --- --- --- variables --- --- --- #
-
-# reading files from words.txt
-with open('words25k.txt', 'r') as file:
-	content = file.read()
-
-word_list = content.split()
-word_list_length = int(len(word_list)) - 1
-completed_words = []
-word_times = []
-
-# --- --- --- functions --- --- --- #
-
-
-# terminal clearing function for cleaner output
-def clear():
-	if os.name == 'nt':
-		os.system('cls')
-	else:
-		os.system('clear')
-
-
-def flush():
-	termios.tcflush(sys.stdin, termios.TCIFLUSH)
-
-
-# generating word (does not print)
-def generate():
-	global current_word
-
-	for i in range(1):
-		random_index = random.randint(0, word_list_length)
-		# picks random word from word_list list
-		current_word = (word_list[random_index]).lower()
-
-	# Use this to print:
-	# print(f'\n\n {current_word} \n\n')
-
-
-def countdown():
-	for i in range(3, 0, -1):
-		print(f'\r{i}', end='', flush=True)
-		time.sleep(1)
-	print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
-	flush()
-
-
-# --- --- --- main code --- --- --- #
+heartwarming_messages = [
+	'skill issues',
+	'baha sucker sucker',
+	'are you bobo?',
+	'imagine failing',
+	'all green',
+	'not achieved in typing',
+	'fatass',
+	'bobo has a higher accuracy than you',
+	'om has a higher accuracy than you',
+	'L',
+]
 
 while True:
+	# terminal clearing function for cleaner output
+	def clear():
+		if os.name == 'nt':
+			os.system('cls')
+		else:
+			os.system('clear')
+
+	def flush():
+		termios.tcflush(sys.stdin, termios.TCIFLUSH)
+
+	# generating word (does not print)
+	def generate():
+		global current_word
+
+		for i in range(1):
+			random_index = random.randint(0, word_list_length)
+			# picks random word from word_list list
+			current_word = (word_list[random_index]).lower()
+
+		# Use this to print:
+		# print(f'\n\n {current_word} \n\n')
+
+	def countdown():
+		for i in range(3, 0, -1):
+			print(f'\r{i}', end='', flush=True)
+			time.sleep(1)
+		print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
+		flush()
+
+	with open('words.txt', 'r') as file:
+		content = file.read()
+
+	word_list = content.split()
+	word_list_length = int(len(word_list)) - 1
+	completed_words = []
+	word_times = []
+
 	clear()
 	print(f"You type the word that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
-	print(
-		f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n'
-	)
+	print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
 	print('Your score will be calculated based on your WPM and average speed.\n\n')
 	start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}) ')
 	try:
@@ -117,8 +116,10 @@ while True:
 						time.sleep(2)
 					else:
 						print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+						print(
+							f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages)))]}{Colors.DEFAULT}'
+						)
 						time.sleep(2)
-						break
 
 				# wpm calculation
 				total_time = sum(word_times)
@@ -126,6 +127,7 @@ while True:
 				all_typed_entries = 0
 				for word in completed_words:
 					all_typed_entries += len(word)
+
 				wpm = (all_typed_entries / 5) / (total_time / 60)
 
 				# summary screen
