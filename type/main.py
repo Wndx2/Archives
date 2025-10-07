@@ -28,19 +28,7 @@ class Colors:
 	GREY = '\033[90m'
 
 
-heartwarming_messages = [
-	'skill issues',
-	'baha sucker sucker',
-	'are you bobo?',
-	'imagine failing',
-	'all green',
-	'not achieved in typing',
-	'fatass',
-	'bobo has a higher accuracy than you',
-	'om has a higher accuracy than you',
-	'L',
-]
-
+# massive loop
 while True:
 	# terminal clearing function for cleaner output
 	def clear():
@@ -64,6 +52,7 @@ while True:
 		# Use this to print:
 		# print(f'\n\n {current_word} \n\n')
 
+	# countdown function
 	def countdown():
 		for i in range(3, 0, -1):
 			print(f'\r{i}', end='', flush=True)
@@ -71,8 +60,24 @@ while True:
 		print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
 		flush()
 
+	# reading the txt file
+	# add options on which text you want to do for the user
 	with open('words.txt', 'r') as file:
 		content = file.read()
+
+	# list of heartwarming messages you could get
+	heartwarming_messages = [
+		'skill issues',
+		'baha sucker sucker',
+		'are you bobo?',
+		'imagine failing',
+		'all green',
+		'not achieved in typing',
+		'fatass',
+		'bobo has a higher accuracy than you',
+		'om has a higher accuracy than you',
+		'L',
+	]
 
 	word_list = content.split()
 	word_list_length = int(len(word_list)) - 1
@@ -80,21 +85,27 @@ while True:
 	word_times = []
 
 	clear()
+	# introduction
 	print(f"You type the word that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
 	print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
 	print('Your score will be calculated based on your WPM and average speed.\n\n')
 	start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}) ')
 	try:
 		clear()
+		# asks word amount
 		if start_game.strip().lower() == 'y':
 			num_words = int(input('How many words? '))
 
+			# blocks zero-div & negative error
 			if num_words <= 0:
 				clear()
 				print('ni meiyou baba')
 				break
+
+			# starts the program if word amount > 0
 			else:
 				# loops function until gets {num_words} appended into the {word_times} list
+				# so if you pick 3 it won't stop until you type 3 correct
 				while len(completed_words) < num_words:
 					generate()
 					clear()
@@ -103,19 +114,22 @@ while True:
 
 					countdown()
 
-					start_time = time.time()
 					# time.time() is the initial time when the timer starts
+					start_time = time.time()
 					user_input = input('>>> ')
 					elapsed_time = time.time() - start_time
 
+					# if correct:
 					if user_input == current_word:
 						print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
 						print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
 						completed_words.append(user_input)
 						word_times.append(elapsed_time)
 						time.sleep(2)
+					# if incorrect:
 					else:
 						print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+						# prints a random heartwarming message
 						print(
 							f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages)))]}{Colors.DEFAULT}'
 						)
@@ -128,6 +142,7 @@ while True:
 				for word in completed_words:
 					all_typed_entries += len(word)
 
+				# standard (gross) wpm calculation formula
 				wpm = (all_typed_entries / 5) / (total_time / 60)
 
 				# summary screen
@@ -135,6 +150,7 @@ while True:
 				print(f'{Colors.GREY}--- --- typed words --- ---\n')
 
 				index = 0
+				# displays all typed words with the time taken next to it
 				for j in completed_words:
 					print(f'{j} : {round(word_times[index], 2)}')
 					index += 1
@@ -173,6 +189,7 @@ while True:
 				completed_words = []
 				word_times = []
 
+		# useless stuff
 		elif start_game == 'n':
 			print('bye')
 			break
