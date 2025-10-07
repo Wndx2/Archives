@@ -116,6 +116,8 @@ while True:
 
 					# time.time() is the initial time when the timer starts
 					start_time = time.time()
+
+					# user inputs here & elapsed time is stored
 					user_input = input('>>> ')
 					elapsed_time = time.time() - start_time
 
@@ -125,6 +127,7 @@ while True:
 						print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
 						completed_words.append(user_input)
 						word_times.append(elapsed_time)
+						# waits 2 seconds before moving to next word
 						time.sleep(2)
 					# if incorrect:
 					else:
@@ -133,6 +136,7 @@ while True:
 						print(
 							f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages)))]}{Colors.DEFAULT}'
 						)
+						# waits 2 seconds before moving to next word
 						time.sleep(2)
 
 				# wpm calculation
