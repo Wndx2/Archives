@@ -3,16 +3,11 @@ making this to practice my python because im getting sodium next year in dtsd ðŸ
 this is still work in progress so stfu
 """
 
-# --- --- --- imports --- --- --- #
-
 import os
 import sys
 import random
 import time
 import termios
-
-
-# --- --- --- classes --- --- --- #
 
 
 # terminal clearing function for cleaner output
@@ -40,11 +35,13 @@ class Colors:
 
 # introduction
 clear()
+
 print(f"You type the word/sentence that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
 print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
 print('Your score will be calculated based on your WPM and average speed.')
 print('Please note that your WPM may not be accurate when typing singular words!\n\n')
 start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}) ')
+
 clear()
 
 # massive loop
@@ -201,10 +198,11 @@ while True:
 					word_times = []
 
 			elif mode.strip() == '2':
+				num_words = int(input('How many words? '))
 				sentence = []
-				for m in range(10):
+				for m in range(num_words):
 					random_index = random.randint(0, word_list_length)
-					sentence.append(word_list[random_index])
+					sentence.append(word_list[random_index].lower())
 				sentence = ' '.join(sentence)
 
 				clear()
@@ -217,7 +215,7 @@ while True:
 				user_input = input('>>> ')
 				elapsed_time = time.time() - start_time
 
-				if user_input == sentence:
+				if user_input.lower() == sentence.lower():
 					print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
 					print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
 
