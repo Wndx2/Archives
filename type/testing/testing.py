@@ -88,35 +88,33 @@ print('Your score will be calculated based on your WPM and average speed.')
 print('Please note that your WPM may not be accurate when typing singular words!\n\n')
 
 
-def gaebo():
+while True:
 	start_game = input(
 		f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}/{Colors.PURPLE}bobo{Colors.DEFAULT})'
 	)
 	if start_game.strip().lower() == 'y':
-		print('start')
+		break
 	elif start_game.strip().lower() == 'n':
 		print('you gotta play')
-		gaebo()
 	elif start_game.strip().lower() == 'bobo':
 		while True:
 			gtfo = random.randint(0, len(heartwarming_messages) - 1)
 			print(heartwarming_messages[gtfo])
 			time.sleep(0.03)
-			gaebo()
 	else:
 		print('i said you gotta play')
-		gaebo()
-	clear()
+clear()
 
-
-gaebo()
-
-"""
-def gaeloop():
+# massive loop
+while True:
+	# reading the txt file
+	# add options on which text you want to do for the user
 	clear()
 	difficulty = input(
 		f'Select Level:\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom\n\n{Colors.DEFAULT}>>> '
 	)
+
+	# mode selection
 	clear()
 	mode = input(
 		f'Select Difficulty:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> '
@@ -300,4 +298,3 @@ def gaeloop():
 
 	except ValueError:
 		continue
-"""
