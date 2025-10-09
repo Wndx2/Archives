@@ -18,7 +18,7 @@ def clear():
 		os.system('clear')
 
 
-# terminal input clearing function
+# terminal input clearing function. (so that the users don't type during the countdown)
 def flush():
 	termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
@@ -123,7 +123,10 @@ while True:
 	try:
 		clear()
 		if start_game.strip().lower() == 'y':
-			if difficulty.strip().lower() == '1':
+			if difficulty.strip().lower() not in ['1', '2', '3']:
+				print('Invalid difficulty(1)')
+				break
+			elif difficulty.strip().lower() == '1':
 				with open('words.txt', 'r') as file:
 					content = file.read()
 			elif difficulty.strip().lower() == '2':
@@ -133,7 +136,7 @@ while True:
 				with open('wordscustom.txt', 'r') as file:
 					content = file.read()
 			else:
-				print('invalid difficulty')
+				print('invalid difficulty(2)')
 				sys.exit()
 
 			word_list = content.split()
