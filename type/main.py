@@ -125,7 +125,6 @@ while True:
 		if start_game.strip().lower() == 'y':
 			if difficulty.strip().lower() not in ['1', '2', '3']:
 				print('Invalid difficulty(1)')
-				break
 			elif difficulty.strip().lower() == '1':
 				with open('words.txt', 'r') as file:
 					content = file.read()
@@ -137,7 +136,6 @@ while True:
 					content = file.read()
 			else:
 				print('invalid difficulty(2)')
-				sys.exit()
 
 			word_list = content.split()
 			word_list_length = int(len(word_list)) - 1
