@@ -1,8 +1,10 @@
 """
-making this to practice my python because im getting sodium next year in dtsd 😭
-this is still work in progress so stfu
+bobotype - v1
+
+created by wndx2 (sleepywndud) and caibirana2-eng
 """
 
+# imports
 import os
 import sys
 import random
@@ -10,44 +12,9 @@ import time
 import termios
 
 
-# terminal clearing function for cleaner output
-def clear():
-	if os.name == 'nt':
-		os.system('cls')
-	else:
-		os.system('clear')
-
-
-# terminal input clearing function. (so that the users don't type during the countdown)
-def flush():
-	termios.tcflush(sys.stdin, termios.TCIFLUSH)
-
-
-# generating word (does not print)
-def generate():
-	global current_word
-
-	for i in range(1):
-		random_index = random.randint(0, word_list_length)
-		# picks random word from word_list list
-		current_word = (word_list[random_index]).lower()
-
-	# Use this to print:
-	# print(f'\n\n {current_word} \n\n')
-
-
-# countdown function
-def countdown():
-	for i in range(3, 0, -1):
-		print(f'\r{i}', end='', flush=True)
-		time.sleep(1)
-	print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
-	flush()
-
-
 class Colors:
 	# print(f'{Colors.BLUE}Enter text here{Colors.DEFAULT}')
-	# https://gist.github.com/iamnewton/8754917 -- for a list of full color codes
+	# https://gist.github.com/iamnewton/8754917 <-- for a list of full color codes
 	# all ansi colors are in colored bold text
 
 	PURPLE = '\033[1;35m'
@@ -78,223 +45,354 @@ heartwarming_messages = [
 	'you animal. no one care animal. so no one care you.',
 ]
 
-# introduction
-clear()
 
-print(f'{Colors.CYAN}Welcome to bobotype!{Colors.DEFAULT}\n')
-print(f"You type the word/sentence that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
-print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
-print('Your score will be calculated based on your WPM and average speed.')
-print('Please note that your WPM may not be accurate when typing singular words!\n\n')
-
-
-while True:
-	start_game = input(
-		f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}/{Colors.PURPLE}bobo{Colors.DEFAULT})'
-	)
-	if start_game.strip().lower() == 'y':
-		break
-	elif start_game.strip().lower() == 'n':
-		print('you gotta play')
-	elif start_game.strip().lower() == 'bobo':
-		while True:
-			gtfo = random.randint(0, len(heartwarming_messages) - 1)
-			print(heartwarming_messages[gtfo])
-			time.sleep(0.03)
+# terminal clearing function for cleaner output
+def clear():
+	# windows
+	if os.name == 'nt':
+		os.system('cls')
+	# mac/linux
 	else:
-		print('i said you gotta play')
-clear()
+		os.system('clear')
 
-# massive loop
-while True:
-	# reading the txt file
-	# add options on which text you want to do for the user
+
+# terminal input clearing function. (so that the users don't type during the countdown)
+def flush():
+	termios.tcflush(sys.stdin, termios.TCIFLUSH)
+
+
+# generating word (does not print)
+def generate():
+	global current_word, word_list, word_list_length
+
+	for i in range(1):
+		random_index = random.randint(0, word_list_length)
+		# picks random word from word_list list
+		current_word = (word_list[random_index]).lower()
+
+	# Use this to print:
+	# print(f'\n\n {current_word} \n\n')
+
+
+# countdown function
+def countdown():
+	for i in range(3, 0, -1):
+		print(f'\r{i}', end='', flush=True)
+		time.sleep(1)
+	print(f'\r{Colors.YELLOW}GO!{Colors.DEFAULT}\n\n')
+	flush()
+
+
+# introduction (does nothing--only prints stuff)
+def introduction():
+	print(f'{Colors.CYAN}Welcome to bobotype!{Colors.DEFAULT}\n')
+	print(f"You type the word/sentence that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
+	print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
+	print('Your score will be calculated based on your WPM and average speed.')
+	print('Please note that your WPM may not be accurate when typing singular words!\n\n')
+
+
+# prints the difficulty selecting screen
+def select_difficulty():
+	global difficulty, content
+
 	clear()
-	difficulty = input(
-		f'Select Level:\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom\n\n{Colors.DEFAULT}>>> '
-	)
 
-	# mode selection
-	clear()
-	mode = input(
-		f'Select Difficulty:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> '
+	print(
+		f'Select Difficulty:\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom{Colors.DEFAULT}'
 	)
+	print(
+		f"{Colors.GREY}Or, click '{Colors.CYAN}0{Colors.GREY}' to return to the main menu{Colors.DEFAULT}\n"
+	)
+	difficulty = input('>>> ')
 
-	try:
+	if difficulty.strip().lower() not in ['0', '1', '2', '3']:
 		clear()
-		if start_game.strip().lower() == 'y':
-			if difficulty.strip().lower() not in ['1', '2', '3']:
-				print('Invalid difficulty(1)')
-			elif difficulty.strip().lower() == '1':
-				with open('words.txt', 'r') as file:
-					content = file.read()
-			elif difficulty.strip().lower() == '2':
-				with open('words25k.txt', 'r') as file:
-					content = file.read()
-			elif difficulty.strip().lower() == '3':
-				with open('wordscustom.txt', 'r') as file:
-					content = file.read()
-			else:
-				print('invalid difficulty(2)')
 
-			word_list = content.split()
-			word_list_length = int(len(word_list)) - 1
-			completed_words = []
-			word_times = []
+		print('invalid difficulty(1)\n')
+		select_difficulty()
 
-			if mode.strip() == '1':
-				num_words = int(input('How many words? '))
+	# reads the corresponding txt file depending on input
+	elif difficulty.strip().lower() == '0':  # return to main menu
+		clear()
+		print('main menu')
+		main()
 
-				if num_words <= 0:
-					clear()
-					print('ni meiyou baba')
-					break
-				else:
-					while len(completed_words) < num_words:
-						generate()
-						clear()
-						print('\nWORD:')
-						print(f'>>> {Colors.BLUE}{current_word}{Colors.DEFAULT}')
+	elif difficulty.strip().lower() == '1':
+		with open('words.txt', 'r') as file:
+			content = file.read()
+		select_mode()
 
-						countdown()
+	elif difficulty.strip().lower() == '2':
+		with open('words25k.txt', 'r') as file:
+			content = file.read()
+		select_mode()
 
-						start_time = time.time()
-						user_input = input('>>> ')
-						elapsed_time = time.time() - start_time
+	elif difficulty.strip().lower() == '3':
+		with open('wordscustom.txt', 'r') as file:
+			content = file.read()
+		select_mode()
 
-						if user_input == current_word:
-							print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
-							print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
-							completed_words.append(user_input)
-							word_times.append(elapsed_time)
-							time.sleep(2)
-						else:
-							print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
-							print(
-								f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
-							)
-							time.sleep(2)
+	else:
+		clear()
+		print('invalid difficulty\n')
+		select_difficulty()
 
-					total_time = sum(word_times)
-					average_time = total_time / num_words
-					all_typed_entries = 0
-					for word in completed_words:
-						all_typed_entries += len(word)
 
-					wpm = (all_typed_entries / 5) / (total_time / 60)
+# prints the mode selecting screen (mode refers to word/sentence--more to be added in the future)
+def select_mode():
+	global mode, word_list_length, completed_words, word_times, num_words, word_list, word_times
 
-					clear()
-					print(f'{Colors.GREY}--- --- typed words --- ---\n')
+	clear()
 
-					index = 0
-					for j in completed_words:
-						print(f'{j} : {round(word_times[index], 2)}')
-						index += 1
+	# makes the .txt file into a variable
+	word_list = content.split()
+	# counts how many words are in the .txt file
+	word_list_length = int(len(word_list)) - 1
+	# initializes the two lists used for counting how many words are accurately typed
+	completed_words = []
+	word_times = []
+	mode = input(f'Select Mode:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> ')
 
-					print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
-					print(f'Average Time: {Colors.YELLOW}{round(average_time, 2)}{Colors.DEFAULT}')
+	if mode.strip() == '1':  # words
+		clear()
+		num_words = int(input('How many words? \n\n>>> '))
+		# invalidates negative, or 0 word counts (zero div error)
+		if num_words <= 0:
+			clear()
 
-					if wpm == 0:
-						print('gtfo')
-						break
-					elif wpm < 30:
-						print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* ni shi stoobid{Colors.DEFAULT}\n')
-					elif wpm > 30 and wpm < 50:
-						print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f"{Colors.GREY}* you're slow asf{Colors.DEFAULT}\n")
-					elif wpm > 50 and wpm < 100:
-						print(f'WPM: {Colors.YELLOW}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* average{Colors.DEFAULT}\n')
-					elif wpm > 100 and wpm < 120:
-						print(f'WPM: {Colors.GREEN}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* good{Colors.DEFAULT}\n')
-					else:
-						print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
-
-					score = round((wpm * 100) - (average_time * 10))
-					print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
-					print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
-					input('Press enter to continue')
-					completed_words = []
-					word_times = []
-
-			elif mode.strip() == '2':
-				num_words = int(input('How many words? '))
-				sentence = []
-				for m in range(num_words):
-					random_index = random.randint(0, word_list_length)
-					sentence.append(word_list[random_index].lower())
-				sentence = ' '.join(sentence)
-
-				clear()
-				print('\nSENTENCE:')
-				print(f'>>> {Colors.BLUE}{sentence}{Colors.DEFAULT}')
-
-				countdown()
-
-				start_time = time.time()
-				user_input = input('>>> ')
-				elapsed_time = time.time() - start_time
-
-				if user_input.lower() == sentence.lower():
-					print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
-					print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
-
-					total_time = elapsed_time
-					all_typed_entries = len(sentence)
-					wpm = (all_typed_entries / 5) / (total_time / 60)
-
-					clear()
-					print(f'{Colors.GREY}--- --- --- --- --- --- ---\n')
-
-					print(sentence)
-
-					print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
-					print(f'Average Time: {Colors.YELLOW}{round(total_time, 2)}{Colors.DEFAULT}')
-
-					if wpm == 0:
-						print('gtfo')
-						break
-					elif wpm < 30:
-						print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* ni shi stoobid{Colors.DEFAULT}\n')
-					elif wpm > 30 and wpm < 50:
-						print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f"{Colors.GREY}* you're slow asf{Colors.DEFAULT}\n")
-					elif wpm > 50 and wpm < 100:
-						print(f'WPM: {Colors.YELLOW}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* average{Colors.DEFAULT}\n')
-					elif wpm > 100 and wpm < 120:
-						print(f'WPM: {Colors.GREEN}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* good{Colors.DEFAULT}\n')
-					else:
-						print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
-						print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
-
-					score = round((wpm * 100) - (total_time * 10))
-					print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
-					print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
-					input('Press enter to continue')
-
-				else:
-					print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
-					print(
-						f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
-					)
-					time.sleep(2)
-
-			else:
-				print('Invalid mode input.')
-
-		elif start_game.strip().lower() == 'n':
-			print('bye')
-			break
+			print('ni meiyou baba\n')
+			# returns the user back to mode-selecting menu
+			select_mode()
 
 		else:
-			print('invalid yes/no')
-			break
+			run_words()
 
-	except ValueError:
-		continue
+	elif mode.strip() == '2':  # sentences
+		run_sentences()
+
+
+# prints the words and checks if it's correct--repeats until the two lists are equal
+def run_words():
+	global word_list, word_times, completed_words
+
+	if len(completed_words) < num_words:
+		generate()
+
+		clear()
+
+		print('\nWORD:')
+		print(f'>>> {Colors.BLUE}{current_word}{Colors.DEFAULT}')
+		countdown()
+
+		start_time = time.time()
+		user_input = input('>>> ')
+		# calculates the elapsed time
+		elapsed_time = time.time() - start_time
+
+		if user_input == current_word:  # correct
+			print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
+			# prints the time, and appends the typed word into the completed_words list
+			# the completed_words list is later used for len-ing later
+			print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
+			completed_words.append(user_input)
+			word_times.append(elapsed_time)
+			time.sleep(2)
+		else:  # incorrect
+			print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+			# prints a heartwarmimg message when wrong
+			print(
+				f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
+			)
+			time.sleep(2)
+		run_words()  # repeats until len of both lists are equal
+
+	else:
+		# prints the summary when the len of both lists are equal
+		# time calculation
+		total_time = sum(word_times)
+		average_time = total_time / num_words
+		all_typed_entries = 0
+
+		for word in completed_words:
+			all_typed_entries += len(word)
+
+		# calculating wpm
+		wpm = (all_typed_entries / 5) / (total_time / 60)
+
+		# prints the words that are typed
+		clear()
+
+		print(f'{Colors.GREY}--- --- typed words --- ---\n')
+
+		index = 0
+		for j in completed_words:
+			print(f'{j} : {round(word_times[index], 2)}')
+			index += 1
+
+		print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
+		print(f'Average Time: {Colors.YELLOW}{round(average_time, 2)}{Colors.DEFAULT}')
+
+		# output comments depending on wpm
+		if wpm == 0:
+			print('gtfo')
+
+		elif wpm < 30:
+			print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* ni shi stoobid{Colors.DEFAULT}\n')
+
+		elif wpm > 30 and wpm < 50:
+			print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f"{Colors.GREY}* you're slow asf{Colors.DEFAULT}\n")
+
+		elif wpm > 50 and wpm < 100:
+			print(f'WPM: {Colors.YELLOW}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* average{Colors.DEFAULT}\n')
+
+		elif wpm > 100 and wpm < 120:
+			print(f'WPM: {Colors.GREEN}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* good{Colors.DEFAULT}\n')
+
+		else:
+			print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
+
+		# calculates score
+		score = round((wpm * 100) - (average_time * 10))
+		print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
+		print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
+		input('Press enter to continue')
+		completed_words = []
+		word_times = []
+
+		# restarts--sends the user back to the start where they select the difficulty
+		select_difficulty()
+
+
+def run_sentences():
+	global sentence, user_input, elapsed_time, num_words
+
+	clear()
+	num_words = int(input('How many words? \n\n>>> '))
+	sentence = []
+
+	for m in range(num_words):
+		random_index = random.randint(0, word_list_length)
+		sentence.append(word_list[random_index].lower())
+	sentence = ' '.join(sentence)
+
+	clear()
+
+	print('\nSENTENCE:')
+	print(f'>>> {Colors.BLUE}{sentence}{Colors.DEFAULT}')
+	countdown()
+
+	start_time = time.time()
+	user_input = input('>>> ')
+	elapsed_time = time.time() - start_time
+
+	if user_input.lower() == sentence.lower():
+		print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
+		print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
+		time.sleep(2)
+
+		# time calculation
+		total_time = elapsed_time
+		all_typed_entries = len(sentence)
+
+		# calculating wpm
+		wpm = (all_typed_entries / 5) / (total_time / 60)
+
+		# prints the sentence that is typed
+		clear()
+
+		print(f'{Colors.GREY}--- --- --- --- --- --- ---\n')
+
+		print(sentence)
+
+		print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
+		print(f'Average Time: {Colors.YELLOW}{round(total_time, 2)}{Colors.DEFAULT}')
+
+		# output comments depending on wpm
+		if wpm == 0:
+			print('gtfo')
+
+		elif wpm < 30:
+			print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* ni shi stoobid{Colors.DEFAULT}\n')
+
+		elif wpm > 30 and wpm < 50:
+			print(f'WPM: {Colors.RED}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f"{Colors.GREY}* you're slow asf{Colors.DEFAULT}\n")
+
+		elif wpm > 50 and wpm < 100:
+			print(f'WPM: {Colors.YELLOW}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* average{Colors.DEFAULT}\n')
+
+		elif wpm > 100 and wpm < 120:
+			print(f'WPM: {Colors.GREEN}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* good{Colors.DEFAULT}\n')
+
+		else:
+			print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
+			print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
+
+		# calculates score
+		score = round((wpm * 100) - (total_time * 10))
+		print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
+		print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
+		input('Press enter to continue')
+		sentence = []
+
+		# restarts--sends the user back to the start where they select the difficulty
+		select_difficulty()
+
+	else:
+		print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+		print(
+			f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
+		)
+		time.sleep(2)
+		select_difficulty()
+
+
+# main function that starts--each function leads to another function
+# so it works in harmony basically
+def main():
+	global start_game
+	# clears the screen before starting
+	clear()
+
+	introduction()
+
+	start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT})\n\n>>> ')
+	if start_game.strip().lower() == 'y':
+		select_difficulty()
+
+	elif start_game.strip().lower() == 'n':
+		clear()
+		print('you gotta play')
+		time.sleep(1)
+		clear()
+		main()
+
+	# easter egg
+	elif (
+		start_game.strip().lower() == ''
+		or start_game.strip().lower() == 'bobo'
+		or start_game.strip().lower() == 'wenbo'
+		or start_game.strip().lower() == 'no u'
+	):
+		# fat spammer
+		while True:
+			print(heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))])
+			time.sleep(0.05)
+
+	else:
+		clear()
+		print(f'{Colors.RED}Invalid option{Colors.DEFAULT}\n')
+		main()
+
+
+# starting function
+main()
