@@ -116,9 +116,7 @@ while True:
 
 	# mode selection
 	clear()
-	mode = input(
-		f'Select Difficulty:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> '
-	)
+	mode = input(f'Select Mode:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> ')
 
 	try:
 		clear()

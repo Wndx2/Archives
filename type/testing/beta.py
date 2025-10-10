@@ -90,17 +90,81 @@ def introduction():
 	print('Please note that your WPM may not be accurate when typing singular words!\n\n')
 
 
+def select_mode():
+	global mode
+	clear()
+	mode = input(f'Select Mode:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> ')
+	if mode.strip() == '1':
+		num_words = int(input('How many words? '))
+
+		if num_words <= 0:
+			clear()
+			print('ni meiyou baba')
+			select_mode()
+		else:
+			while len(completed_words) < num_words:
+				generate()
+				clear()
+				print('\nWORD:')
+				print(f'>>> {Colors.BLUE}{current_word}{Colors.DEFAULT}')
+
+				countdown()
+
+				start_time = time.time()
+				user_input = input('>>> ')
+				elapsed_time = time.time() - start_time
+
+				if user_input == current_word:
+					print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
+					print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
+					completed_words.append(user_input)
+					word_times.append(elapsed_time)
+					time.sleep(2)
+				else:
+					print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+					print(
+						f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
+					)
+					time.sleep(2)
+
+
+def select_difficulty():
+	global difficulty, content
+	clear()
+	difficulty = input(
+		f'Select Level:\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom\n\n{Colors.DEFAULT}>>> '
+	)
+	if difficulty.strip().lower() not in ['1', '2', '3']:
+		clear()
+		print('invalid difficulty(1)\n')
+		select_difficulty()
+	elif difficulty.strip().lower() == '1':
+		with open('../words.txt', 'r') as file:
+			content = file.read()
+		mode_select()
+	elif difficulty.strip().lower() == '2':
+		with open('../words25k.txt', 'r') as file:
+			content = file.read()
+		mode_select()
+	elif difficulty.strip().lower() == '3':
+		with open('../wordscustom.txt', 'r') as file:
+			content = file.read()
+		mode_select()
+	else:
+		clear()
+		print('invalid difficulty(2)\n')
+		select_difficulty()
+
+
 # main function
 def main():
 	global start_game
 	introduction()
 	start_game = input(
-		f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}/{Colors.PURPLE}bobo{Colors.DEFAULT})'
+		f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}/{Colors.PURPLE}bobo{Colors.DEFAULT})\n>>> '
 	)
 	if start_game.strip().lower() == 'y':
-		print('start')
-	elif start_game.strip().lower() == 'n':
-		print('nostart')
+		select_difficulty()
 	elif start_game.strip().lower() == 'bobo':
 		print('ni shi bobo')
 	else:
