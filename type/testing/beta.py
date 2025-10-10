@@ -78,10 +78,8 @@ heartwarming_messages = [
 	'you animal. no one care animal. so no one care you.',
 ]
 
+
 # introduction
-clear()
-
-
 def introduction():
 	print(f'{Colors.CYAN}Welcome to bobotype!{Colors.DEFAULT}\n')
 	print(f"You type the word/sentence that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
@@ -107,6 +105,7 @@ def countdown():
 	flush()
 
 
+# prints the words and checks if it's correct--repeats until the two lists are equal
 def run_words():
 	if len(completed_words) < num_words:
 		generate()
@@ -116,43 +115,58 @@ def run_words():
 		countdown()
 		start_time = time.time()
 		user_input = input('>>> ')
+		# calculates the elapsed time
 		elapsed_time = time.time() - start_time
 
-		if user_input == current_word:
+		if user_input == current_word:  # correct
 			print(f'{Colors.GREEN}\n\nCorrect!{Colors.DEFAULT}')
+			# prints the time, and appends the typed word into the completed_words list
+			# the completed_words list is later used for len-ing later
 			print(f'Time taken: {elapsed_time:.2f} seconds\n\n')
 			completed_words.append(user_input)
 			word_times.append(elapsed_time)
 			time.sleep(2)
-		else:
+		else:  # incorrect
 			print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
+			# prints a heartwarmimg message when wrong
 			print(
 				f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
 			)
 			time.sleep(2)
-		run_words()
+		run_words()  # repeats until len of both lists are equal
 	else:
+		# prints the summary when the len of both lists are equal
 		summary()
 
 
+# prints the mode selecting screen (mode refers to word/sentence--more to be added in the future)
 def select_mode():
 	global mode, word_list_length, completed_words, word_times, num_words, word_list, word_times
 	clear()
+	# makes the .txt file into a variable
 	word_list = content.split()
+	# counts how many words are in the .txt file
 	word_list_length = int(len(word_list)) - 1
+	# initializes the two lists used for counting how many words are accurately typed
 	completed_words = []
 	word_times = []
 	mode = input(f'Select Mode:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> ')
-	if mode.strip() == '1':
+	# 1 for words, and 2 for sentences (2 is not implemented yet)
+	if mode.strip() == '1':  # words
 		num_words = int(input('How many words? '))
+		# invalidates negative, or 0 word counts (zero div error)
 		if num_words <= 0:
 			clear()
 			print('ni meiyou baba\n')
+			# returns the user back to mode-selecting menu
 			select_mode()
 		else:
 			run_words()
+	elif mode.strip() == '2':  # sentences
+		print()  # PLACEHOLDER AS OF NOW
 
 
+# prints the difficulty selecting screen
 def select_difficulty():
 	global difficulty, content
 	clear()
@@ -163,6 +177,7 @@ def select_difficulty():
 		clear()
 		print('invalid difficulty(1)\n')
 		select_difficulty()
+	# reads the corresponding txt file depending on input
 	elif difficulty.strip().lower() == '1':
 		with open('../words.txt', 'r') as file:
 			content = file.read()
@@ -181,16 +196,20 @@ def select_difficulty():
 		select_difficulty()
 
 
+# printing summary screen
 def summary():
 	global word_times, completed_words
+	# time calculation
 	total_time = sum(word_times)
 	average_time = total_time / num_words
 	all_typed_entries = 0
 	for word in completed_words:
 		all_typed_entries += len(word)
 
+	# calculating wpm
 	wpm = (all_typed_entries / 5) / (total_time / 60)
 
+	# prints the words that are typed
 	clear()
 	print(f'{Colors.GREY}--- --- typed words --- ---\n')
 
@@ -202,6 +221,7 @@ def summary():
 	print(f'\n--- --- --- --- --- --- ---{Colors.DEFAULT}\n\n')
 	print(f'Average Time: {Colors.YELLOW}{round(average_time, 2)}{Colors.DEFAULT}')
 
+	# output comments depending on wpm
 	if wpm == 0:
 		print('gtfo')
 	elif wpm < 30:
@@ -220,18 +240,24 @@ def summary():
 		print(f'WPM: {Colors.PURPLE}{round(wpm, 2)}{Colors.DEFAULT}')
 		print(f'{Colors.GREY}* touch grass{Colors.DEFAULT}\n')
 
+	# calculates score
 	score = round((wpm * 100) - (average_time * 10))
 	print(f'Your score is: {Colors.PURPLE}{score}{Colors.DEFAULT}\n\n')
 	print(f'{Colors.GREY}--- --- --- --- --- --- ---{Colors.DEFAULT}\n')
 	input('Press enter to continue')
 	completed_words = []
 	word_times = []
+
+	# restarts -- sends the user back to the start where they select the difficulty
 	select_difficulty()
 
 
-# main function
+# main function that starts -- each function leads to another function
+# so it works in harmony basically
 def main():
 	global start_game
+	# clears the screen before starting
+	clear()
 	introduction()
 	start_game = input(
 		f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT}/{Colors.PURPLE}bobo{Colors.DEFAULT})\n>>> '
