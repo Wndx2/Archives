@@ -2,6 +2,7 @@
 bobotype - v1
 
 created by wndx2 (sleepywndud) and caibirana2-eng
+
 """
 
 # imports
@@ -43,6 +44,8 @@ heartwarming_messages = [
 	'cai jiu duo lian shu bu qi jiu bie wan yi qian shi yi qian xian zai shi xian zai',
 	'cai',
 	'you animal. no one care animal. so no one care you.',
+	'ni meiyou baba',
+	'ni shi gae',
 ]
 
 
@@ -83,9 +86,9 @@ def countdown():
 	flush()
 
 
-# introduction (does nothing--only prints stuff)
+# introduction
 def introduction():
-	print(f'{Colors.CYAN}Welcome to bobotype!{Colors.DEFAULT}\n')
+	print(f'{Colors.CYAN}Welcome to BOBOTYPE!{Colors.DEFAULT}\n')
 	print(f"You type the word/sentence that's printed in {Colors.BLUE}blue{Colors.DEFAULT}.")
 	print(f'Press {Colors.GREY}"enter"{Colors.DEFAULT} once you are done typing to submit your input.\n')
 	print('Your score will be calculated based on your WPM and average speed.')
@@ -152,7 +155,11 @@ def select_mode():
 	# initializes the two lists used for counting how many words are accurately typed
 	completed_words = []
 	word_times = []
-	mode = input(f'Select Mode:\n{Colors.GREEN}1. Words\n{Colors.BLUE}2. Sentence\n\n{Colors.DEFAULT}>>> ')
+	print('Select Mode:\n')
+	print(f'{Colors.GREEN}1. Word(s)')
+	print(f'{Colors.BLUE}2. Sentence')
+	print(f'{Colors.YELLOW}3. Endurance\n')
+	mode = input(f'{Colors.DEFAULT}\n>>> ')
 
 	if mode.strip() == '1':  # words
 		clear()
@@ -170,6 +177,9 @@ def select_mode():
 
 	elif mode.strip() == '2':  # sentences
 		run_sentences()
+
+	elif mode.strip() == '3':  # endurance
+		run_endurance()
 
 
 # prints the words and checks if it's correct--repeats until the two lists are equal
@@ -356,10 +366,35 @@ def run_sentences():
 		select_difficulty()
 
 
+def run_endurance():
+	global current_sentence, next_sentence
+
+	# plan is to generate two sentences at once; when current_sentence is complete
+	# make next_sentence == current_sentence, then re-generate next_sentence, then repeat
+	current_sentence = []
+	next_sentence = []
+
+	for m in range(10):
+		random_index = random.randint(0, word_list_length)
+		current_sentence.append(word_list[random_index].lower())
+
+		random_index = random.randint(0, word_list_length)
+		next_sentence.append(word_list[random_index].lower())
+
+	current_sentence = ' '.join(current_sentence)
+	next_sentence = ' '.join(next_sentence)
+
+	clear()
+	print('ENDURANCE:')
+	print(f'>>> {Colors.BLUE}{current_sentence}')
+	print(f'{Colors.GREY}{next_sentence}{Colors.DEFAULT}')
+
+
 # main function that starts--each function leads to another function
 # so it works in harmony basically
 def main():
 	global start_game
+
 	# clears the screen before starting
 	clear()
 
@@ -376,7 +411,7 @@ def main():
 		clear()
 		main()
 
-	# easter egg
+	# easter eggs
 	elif (
 		start_game.strip().lower() == ''
 		or start_game.strip().lower() == 'bobo'
