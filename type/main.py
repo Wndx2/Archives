@@ -374,6 +374,10 @@ def run_endurance():
 	current_sentence = []
 	next_sentence = []
 
+	# change to user input later on
+	time_limit = 30
+	current_time = 30
+
 	for m in range(10):
 		random_index = random.randint(0, word_list_length)
 		current_sentence.append(word_list[random_index].lower())
@@ -384,10 +388,19 @@ def run_endurance():
 	current_sentence = ' '.join(current_sentence)
 	next_sentence = ' '.join(next_sentence)
 
-	clear()
-	print('ENDURANCE:')
-	print(f'>>> {Colors.BLUE}{current_sentence}')
-	print(f'{Colors.GREY}{next_sentence}{Colors.DEFAULT}')
+	# fuck this shit
+	while current_time != time_limit:
+		clear()
+		print('ENDURANCE:')
+		print(f'>>> {Colors.BLUE}{current_sentence}')
+		print(f'{Colors.GREY}{next_sentence}{Colors.DEFAULT}')
+
+		if user_input.lower() == current_sentence.lower():
+			next_sentence == current_sentence
+
+			for m in range(10):
+				random_index = random.randint(0, word_list_length)
+				next_sentence.append(word_list[random_index].lower())
 
 
 # main function that starts--each function leads to another function
