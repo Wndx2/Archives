@@ -95,14 +95,20 @@ def introduction():
 	print('Please note that your WPM may not be accurate when typing singular words!\n\n')
 
 
-# prints the difficulty selecting screen
-def select_difficulty():
-	global difficulty, content
-
+def select_mode():
 	clear()
+	print('Select Mode:\n')
+	print(f'{Colors.GREEN}1. Word(s)')
+	print(f'{Colors.BLUE}2. Sentence')
+	print(f'{Colors.YELLOW}3. Reaction\n')
+	mode = input(f'{Colors.DEFAULT}\n>>> ')
+	return mode.strip()
 
+
+def select_difficulty():
+	clear()
 	print(
-		f'Select Difficulty:\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom{Colors.DEFAULT}'
+		f'Select Difficulty:\n\n{Colors.GREEN}1. Easy\n{Colors.RED}2. Hard\n{Colors.PURPLE}3. Custom{Colors.DEFAULT}'
 	)
 	print(
 		f"{Colors.GREY}Or, click '{Colors.CYAN}0{Colors.GREY}' to return to the main menu{Colors.DEFAULT}\n"
@@ -111,75 +117,30 @@ def select_difficulty():
 
 	if difficulty.strip().lower() not in ['0', '1', '2', '3']:
 		clear()
-
 		print('invalid difficulty(1)\n')
-		select_difficulty()
+		return select_difficulty()
 
-	# reads the corresponding txt file depending on input
-	elif difficulty.strip().lower() == '0':  # return to main menu
+	elif difficulty.strip().lower() == '0':
 		clear()
 		print('main menu')
 		main()
+		return None
 
 	elif difficulty.strip().lower() == '1':
 		with open('words.txt', 'r') as file:
-			content = file.read()
-		select_mode()
+			return file.read()
 
 	elif difficulty.strip().lower() == '2':
 		with open('words25k.txt', 'r') as file:
-			content = file.read()
-		select_mode()
+			return file.read()
 
 	elif difficulty.strip().lower() == '3':
 		with open('wordscustom.txt', 'r') as file:
-			content = file.read()
-		select_mode()
-
+			return file.read()
 	else:
 		clear()
 		print('invalid difficulty\n')
-		select_difficulty()
-
-
-# prints the mode selecting screen (mode refers to word/sentence--more to be added in the future)
-def select_mode():
-	global mode, word_list_length, completed_words, word_times, num_words, word_list, word_times
-
-	clear()
-
-	# makes the .txt file into a variable
-	word_list = content.split()
-	# counts how many words are in the .txt file
-	word_list_length = int(len(word_list)) - 1
-	# initializes the two lists used for counting how many words are accurately typed
-	completed_words = []
-	word_times = []
-	print('Select Mode:\n')
-	print(f'{Colors.GREEN}1. Word(s)')
-	print(f'{Colors.BLUE}2. Sentence')
-	print(f'{Colors.YELLOW}3. Endurance\n')
-	mode = input(f'{Colors.DEFAULT}\n>>> ')
-
-	if mode.strip() == '1':  # words
-		clear()
-		num_words = int(input('How many words? \n\n>>> '))
-		# invalidates negative, or 0 word counts (zero div error)
-		if num_words <= 0:
-			clear()
-
-			print('ni meiyou baba\n')
-			# returns the user back to mode-selecting menu
-			select_mode()
-
-		else:
-			run_words()
-
-	elif mode.strip() == '2':  # sentences
-		run_sentences()
-
-	elif mode.strip() == '3':  # endurance
-		run_endurance()
+		return select_difficulty()
 
 
 # prints the words and checks if it's correct--repeats until the two lists are equal
@@ -276,7 +237,7 @@ def run_words():
 		word_times = []
 
 		# restarts--sends the user back to the start where they select the difficulty
-		select_difficulty()
+		main()
 
 
 def run_sentences():
@@ -355,7 +316,7 @@ def run_sentences():
 		sentence = []
 
 		# restarts--sends the user back to the start where they select the difficulty
-		select_difficulty()
+		main()
 
 	else:
 		print(f'{Colors.RED}\n\nFailed!{Colors.DEFAULT}')
@@ -363,50 +324,18 @@ def run_sentences():
 			f'{Colors.GREY}{heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))]}{Colors.DEFAULT}'
 		)
 		time.sleep(2)
-		select_difficulty()
+		select_mode()
 
 
-def run_endurance():
-	global current_sentence, next_sentence
-
-	# plan is to generate two sentences at once; when current_sentence is complete
-	# make next_sentence == current_sentence, then re-generate next_sentence, then repeat
-	current_sentence = []
-	next_sentence = []
-
-	# change to user input later on
-	time_limit = 30
-	current_time = 30
-
-	for m in range(10):
-		random_index = random.randint(0, word_list_length)
-		current_sentence.append(word_list[random_index].lower())
-
-		random_index = random.randint(0, word_list_length)
-		next_sentence.append(word_list[random_index].lower())
-
-	current_sentence = ' '.join(current_sentence)
-	next_sentence = ' '.join(next_sentence)
-
-	# fuck this shit
-	while current_time != time_limit:
-		clear()
-		print('ENDURANCE:')
-		print(f'>>> {Colors.BLUE}{current_sentence}')
-		print(f'{Colors.GREY}{next_sentence}{Colors.DEFAULT}')
-
-		if user_input.lower() == current_sentence.lower():
-			next_sentence == current_sentence
-
-			for m in range(10):
-				random_index = random.randint(0, word_list_length)
-				next_sentence.append(word_list[random_index].lower())
+def run_reaction():
+	print("In this mode, you have to click the 'enter' key as soon as you see the word 'BOBO'.")
+	input("Press 'enter' to continue.")
 
 
 # main function that starts--each function leads to another function
 # so it works in harmony basically
 def main():
-	global start_game
+	global start_game, content, word_list, word_list_length, completed_words, word_times, num_words
 
 	# clears the screen before starting
 	clear()
@@ -415,7 +344,35 @@ def main():
 
 	start_game = input(f'Start? ({Colors.GREEN}y{Colors.DEFAULT}/{Colors.RED}n{Colors.DEFAULT})\n\n>>> ')
 	if start_game.strip().lower() == 'y':
-		select_difficulty()
+		mode = select_mode()
+		content = select_difficulty()
+
+		if content:
+			word_list = content.split()
+			word_list_length = int(len(word_list)) - 1
+			completed_words = []
+			word_times = []
+
+			if mode == '1':  # words
+				clear()
+				num_words = int(input('How many words? \n\n>>> '))
+				if num_words <= 0:
+					clear()
+					print('ni meiyou baba\n')
+					main()
+				else:
+					run_words()
+
+			elif mode == '2':  # sentences
+				run_sentences()
+
+			elif mode == '3':
+				print('in progress')
+				run_reaction()
+			else:
+				clear()
+				print(f'{Colors.RED}Invalid option{Colors.DEFAULT}\n')
+				main()
 
 	elif start_game.strip().lower() == 'n':
 		clear()
@@ -431,7 +388,7 @@ def main():
 		or start_game.strip().lower() == 'wenbo'
 		or start_game.strip().lower() == 'no u'
 	):
-		# fat spammer
+		# spammer
 		while True:
 			print(heartwarming_messages[int(random.randint(0, len(heartwarming_messages) - 1))])
 			time.sleep(0.05)
