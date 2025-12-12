@@ -1,0 +1,60 @@
+.sk_thead th,
+.sk_thead_cell {
+  background-color: #005151;
+  color: #fff;
+  border-color: transparent;
+}
+
+.bg-success,
+.bg-info,
+.bg-danger,
+.bg-warning {
+  color: #fff;
+}
+
+.btn-success,
+.btn-info,
+.btn-danger,
+.btn-warning {
+  color: #fff;
+}
+
+.table.table-ncea-details td.result-credits {
+  width: 120px;
+  color: inherit;
+}
+
+td.result-value {
+  width: 240px;
+  color: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sk_nav {
+    background-color: #005151;
+  }
+}
+
+kbd {
+  padding: 0.2rem 0.4rem;
+  font-size: 87.5%;
+  color: #fff;
+  background-color: #005151;
+  border-radius: 0.2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sk_heading,
+  .page-title h1 {
+    color: #000000;
+  }
+}
+
+b {
+  font-weight: bolder;
+  color: inherit;
+}
+
+.page-ncea-summary .ncea-summary .svg-icon.green-tick svg path {
+  fill: #1e7e34 !important;
+}
