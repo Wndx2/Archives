@@ -1,0 +1,87 @@
+@font-face {
+  font-family: ggSans;
+  src: url(fonts/ggSans/ggsans-Normal.ttf);
+}
+
+@font-face {
+  font-family: gintoDiscord;
+  src: url(fonts/gintoDiscord/ABCGintoDiscord-Regular.ttf);
+}
+
+@font-face {
+  font-family: gintoDiscordNord;
+  src: url(fonts/gintoDiscordNord/ABCGintoDiscordNord-Bold.ttf);
+}
+
+:root {
+  font-family: "ggSans";
+}
+
+.theme-dark {
+  /* COLOR VARIABLE CONFIGURATION */
+  --black: #000000; /* PRIMARY BACKGROUND COLOR */
+  --white: #ffffff; /* PRIMARY TEXT COLOR */
+
+  --color-base-05: #080808;
+  --color-base-10: #111111;
+  --color-base-20: #1a1a1a;
+  --color-base-25: #222222;
+  --color-base-30: #333333;
+  --color-base-35: #363636;
+  --color-base-40: #4a4a4a;
+  --color-base-50: #666666;
+  --color-base-60: #999999;
+  --color-base-70: #bbbbbb;
+
+  /* DEFAULT ACCENT COLOR */
+  --default-purple: #8a5cf5;
+
+  /* ACCENT COLORS FROM DIAGRAMS */
+  --cyan: #81ffff;
+  --magenta: #ff81ff;
+  --yellow: #ffff81;
+
+  /* GRAPH VIEW COLORS */
+  --graph-node: var(--cyan);
+  --graph-node-attachment: var(--color-base-40);
+  --graph-node-tag: var(--magenta);
+
+  /* BACKGROUND COLORS */
+  --background-primary: var(--black);
+  --background-secondary: var(--color-base-05);
+  --titlebar-background: var(--black);
+  --titlebar-background-focused: var(--black);
+  --code-background: var(
+    --color-base-10
+  ); /* BACKGROUND COLOR FOR CODE SNIPPETS 	*/
+
+  /* MARKDOWNED TEXT COLORS */
+  --bold-color: var(--cyan); /* BOLD TEXT COLOR					EG: **TEXT** 		*/
+  --italic-color: var(--magenta); /* ITALIC TEXT COLOR 			EG: *TEXT*			*/
+
+  --tag-color: var(); /* PAGE-INTERNAL TAGS 						EG: #TAG 			*/
+  --link-color: var(); /* PAGE-LINKING USING 						EG: [[PAGE]] 		*/
+
+  /* TABLE CONFIGURATIONS */
+  table {
+    width: 100%; /* THIS MAKES THE TABLE SPAN ACROSS THE WHOLE PAGE */
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    border: 1px solid var(--color-base-20); /* TOP RECORD BORDER */
+    text-align: left;
+    word-wrap: break-word;
+  }
+
+  th {
+    border: 1px solid var(--color-base-20) !important; /* (FORCING) OTHER RECORD BORDER TO BASE10 */
+    background-color: var(
+      --black
+    ) !important; /* (FORCING) TABLE TABLE FILL COLOR */
+    color: var(--white); /* TABLE-INTERNAL TEXT COLOR */
+  }
+}
