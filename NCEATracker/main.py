@@ -1,26 +1,51 @@
-import sys
-from PySide6.QtWidgets import QApplication, QMainWindow
-# from PySide6.QtCharts import QChart, QChartView, QPieSeries
+import sqlite3
+import os
+from cogs import record_grade
+from cogs import remove_grade
+from cogs import standard_detail
 
-app = QApplication(sys.argv)
+# Connect to the database
+db = sqlite3.connect("Grade-Tracker.db")
+cursor = db.cursor()
 
-"""
-series = QPieSeries()
-series.append("Math", 30)
-series.append("Science", 25)
-series.append("English", 45)
 
-chart = QChart()
-chart.addSeries(series)
-chart.setTitle("2025 Credits")
+# Function to clean the terminal
+def clearScreen():
+    if os.name == "nt":  # If the operating system is Windows
+        os.system("CLS")
+    else:  # If the operating system is NOT Windows
+        os.system("clear")
 
-chart_view = QChartView(chart)
-chart_view.setRenderHint(chart_view.renderHints())
-"""
 
-window = QMainWindow()
-# window.setCentralWidget(chart_view) --> gonna be used later on
-window.resize(1900, 1600)  # fullscreen on macbook air m1
-window.show()
+def main():
+    clearScreen()
+    print("\nHello, Welcome to your NCEA Grade Tracker")
+    while True:
+        print("\nWhat would you like to do?")
+        print("")
+        print("1. Record your grade")
+        print("2. Remove your recorded grade")
+        print("3. See your grade for a standard")
+        print("\n4. Exit")
+        print("5. Help")
 
-app.exec()
+        answer = input(">_ ").strip()
+        if answer == "1":  # RECORD GRADE
+            record_grade.record_grade()
+            continue
+        elif answer == "2":  # REMOVE GRADE
+            remove_grade.remove_grade()
+            continue
+        elif answer == "3":  # STANDARD DETAILS
+            standard_detail.standard_detail()
+            continue
+        elif answer == "4":  # EXIT
+            break
+        else:  # OTHER
+            clearScreen()
+            print("INVALID INPUT")
+            continue
+
+
+if __name__ == "__main__":
+    main()
